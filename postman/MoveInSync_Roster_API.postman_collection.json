@@ -1,0 +1,409 @@
+{
+  "info": {
+    "name": "MoveInSync Driver Duty Roster API",
+    "_postman_id": "a91b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+    "description": "Production API collection for MoveInSync Case Study 6: Driver Duty Roster & Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Login as Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.environment.set(\"jwt_token\", jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Driver Management",
+      "item": [
+        {
+          "name": "Create HMV Driver (Eligible for BUS)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rajesh Kumar\",\n  \"phoneNumber\": \"+919876543210\",\n  \"licenceClass\": \"HMV\",\n  \"licenceExpiryDate\": \"2027-12-31\",\n  \"medicalValidityDate\": \"2027-12-31\",\n  \"trainingValidityDate\": \"2027-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drivers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "drivers"]
+            }
+          }
+        },
+        {
+          "name": "Create LMV Driver (Eligible for CAB/SHUTTLE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Suresh Verma\",\n  \"phoneNumber\": \"+919876543211\",\n  \"licenceClass\": \"LMV\",\n  \"licenceExpiryDate\": \"2027-12-31\",\n  \"medicalValidityDate\": \"2027-12-31\",\n  \"trainingValidityDate\": \"2027-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drivers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "drivers"]
+            }
+          }
+        },
+        {
+          "name": "List Drivers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drivers?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "drivers"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Vehicle Management",
+      "item": [
+        {
+          "name": "Create BUS Vehicle (Requires HMV)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"registrationNumber\": \"KA01BUS1001\",\n  \"vehicleType\": \"BUS\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Create CAB Vehicle (Requires LMV)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"registrationNumber\": \"KA01CAB2001\",\n  \"vehicleType\": \"CAB\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "vehicles"]
+            }
+          }
+        },
+        {
+          "name": "List Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/vehicles?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "vehicles"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Duties & Roster Generation",
+      "item": [
+        {
+          "name": "Create Duty 1 (BUS: 06:00 - 10:00)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requiredVehicleType\": \"BUS\",\n  \"startTime\": \"2026-10-20T06:00:00\",\n  \"endTime\": \"2026-10-20T10:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/duties",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "duties"]
+            }
+          }
+        },
+        {
+          "name": "Create Duty 2 (CAB: 06:00 - 10:00)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"requiredVehicleType\": \"CAB\",\n  \"startTime\": \"2026-10-20T06:00:00\",\n  \"endTime\": \"2026-10-20T10:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/duties",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "duties"]
+            }
+          }
+        },
+        {
+          "name": "Generate Roster",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startTime\": \"2026-10-20T00:00:00\",\n  \"endTime\": \"2026-10-20T23:59:59\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roster/generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "roster", "generate"]
+            }
+          }
+        },
+        {
+          "name": "Reassign Duty (Driver Dropout)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dutyId\": 1,\n  \"unavailableDriverId\": 1,\n  \"reason\": \"Driver reported sick with sudden flu\",\n  \"idempotencyKey\": \"reassign-duty-1-dropout-001\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/roster/reassign",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "roster", "reassign"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Reports & Audit",
+      "item": [
+        {
+          "name": "Get Conflict Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/conflicts?startTime=2026-10-20T00:00:00&endTime=2026-10-20T23:59:59",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reports", "conflicts"],
+              "query": [
+                { "key": "startTime", "value": "2026-10-20T00:00:00" },
+                { "key": "endTime", "value": "2026-10-20T23:59:59" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Driver Utilization",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/utilization/drivers?startTime=2026-10-20T00:00:00&endTime=2026-10-20T23:59:59",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reports", "utilization", "drivers"],
+              "query": [
+                { "key": "startTime", "value": "2026-10-20T00:00:00" },
+                { "key": "endTime", "value": "2026-10-20T23:59:59" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicle Utilization",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/utilization/vehicles?startTime=2026-10-20T00:00:00&endTime=2026-10-20T23:59:59",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reports", "utilization", "vehicles"],
+              "query": [
+                { "key": "startTime", "value": "2026-10-20T00:00:00" },
+                { "key": "endTime", "value": "2026-10-20T23:59:59" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Duty Audit Trail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/reports/duties/1/audit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "reports", "duties", "1", "audit"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
